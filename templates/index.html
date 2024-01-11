@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animal Classification API</title>
+    <link rel="stylesheet" type="text/css" href="../static/styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            // Attach a listener to the form submission
+            $('form').submit(function (event) {
+                event.preventDefault();
+
+                var formData = new FormData($(this)[0]);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/predict',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        // Update the image and prediction information on the page
+                        if (response.uploaded_image) {
+                            $('#uploaded-image').attr('src', 'data:image/jpeg;base64,' + response.uploaded_image);
+                        }
+
+                        $('#predicted-class').text('Predicted Class: ' + response.predicted_class);
+                        $('#probability').text('Probability: ' + response.probability.toFixed(4));
+
+                        // top 3 predictions
+                        $('#top-3-predictions').empty();
+                        response.top3_predictions.forEach(function (prediction) {
+                            var listItem = $('<li>').text(prediction.class + ': ' + prediction.probability.toFixed(4));
+                            $('#top-3-predictions').append(listItem);
+                        });
+
+                        // Display extra explanations
+                        var explanation = 'For the image you selected, the API predicted that it\'s this animal: ';
+                        explanation += '<span class="highlight-prediction">' + response.predicted_class + '</span>';
+                        $('#result-explanation').html(explanation);
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+        });
+    </script>
+
+</head>
+<body>
+<h1>Animal Classification API</h1>
+
+<div class="header-info">
+    <div class="left-info">
+        <p>Project for Deep Learning and Software Engineering</p>
+    </div>
+    <div class="right-info">
+        <p>Developers: Andrei + Alexandra</p>
+    </div>
+</div>
+
+<div class="tooltip-box">Instructions: All you have to do is click on the "Choose file" button, select the image you're interested in using, and then click "submit"</div>
+
+<form enctype="multipart/form-data">
+    <label for="file" id="fileLabel" class="label-for-file">
+        Choose File
+        <input type="file" id="file" name="file" accept=".jpg, .jpeg, .png">
+    </label>
+    <br>
+    <input type="submit" value="Submit">
+</form>
+<div class="predictions-container">
+    <div class="predicted-class-container">
+        <p id="predicted-class">Predicted Class: </p>
+    </div>
+    <div class="image-container">
+        <img id="uploaded-image" alt="Uploaded Image">
+    </div>
+    <div class="top-predictions-container">
+        <h3>Top 3 Predictions:</h3>
+        <ul id="top-3-predictions"></ul>
+    </div>
+</div>
+</body>
+</html>
