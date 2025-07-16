@@ -18,7 +18,8 @@ The final model was trained for 70 epochs, using Adam and a learning rate of 0.0
    git clone [https://github.com/andrew-smalls/animal-classification-api.git]
    cd animal-classification-api
 
-2. Download trained model, class labels and a few test image examples from [here](https://drive.google.com/file/d/1z30itdhVJTkgP_YIHzRWRMyWxQzLRdCI/view?usp=sharing) 
+2. Download trained model, class labels and a few test image examples from [here](https://drive.google.com/drive/folders/1cYNQoP1N3ErGTBGWYrethW1PLe4FokCy?usp=sharing)
+- (the code for the model training cn be found inside the `model_training` directory of this repository)
 - extract the contents of the archive inside the animal-classification-api directory
 - the model.h5 and class_indices.json will be used by the program
 - the test_images_for_api directory is for the user (you can choose images from here to test how the model behaves, or you can test the API by using your own images)
